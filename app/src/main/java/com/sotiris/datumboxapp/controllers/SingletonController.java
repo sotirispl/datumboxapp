@@ -18,4 +18,10 @@ public class SingletonController {
         return controller;
     }
 
+    public String analyzeText(String text) {
+
+        return "Test";
+
+    }
+
 }
