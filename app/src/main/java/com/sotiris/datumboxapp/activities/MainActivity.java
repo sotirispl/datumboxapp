@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.sotiris.datumboxapp.R;
 import com.sotiris.datumboxapp.controllers.SingletonController;
 
+import java.io.IOException;
+
 public class MainActivity extends Activity {
 
     private SingletonController controller;
@@ -36,7 +38,13 @@ public class MainActivity extends Activity {
                     editText.setError("Enter some text to analyze!");
                     return;
                 }
-                controller.analyzeText(txt);
+                try {
+                    String response = controller.analyzeText(txt);
+                    EditText responseText = (EditText) findViewById(R.id.responseText);
+                    responseText.setText(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
