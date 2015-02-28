@@ -15,6 +15,7 @@ import com.sotiris.datumboxapp.R;
 import com.sotiris.datumboxapp.controllers.SingletonController;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends Activity {
 
@@ -42,7 +43,7 @@ public class MainActivity extends Activity {
                     String response = controller.analyzeText(txt);
                     EditText responseText = (EditText) findViewById(R.id.responseText);
                     responseText.setText(response);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

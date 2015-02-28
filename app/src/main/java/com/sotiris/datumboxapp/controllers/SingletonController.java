@@ -5,13 +5,16 @@ import com.sotiris.datumboxapp.utils.HitApiService;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.commons.io.IOUtils;
 
 
@@ -22,14 +25,13 @@ public class SingletonController {
 
     private static SingletonController controller = null;
 
-    private static Logger logger;
     private static AppConfig config;
-    private static HitApiService hitApiService;
-
+    private ExecutorService service;
+    private Future<InputStream> hitApiService;
     private String responseData;
 
     private SingletonController() {
-        logger = LoggerFactory.getLogger(SingletonController.class);
+        config = AppConfig.init();
     }
 
     public static SingletonController getController() {
@@ -40,16 +42,16 @@ public class SingletonController {
         return controller;
     }
 
-    public String analyzeText(String text) throws IOException {
+    public String analyzeText(String text) throws IOException, ExecutionException, InterruptedException {
         String urlParameters = "api_key=" + config.getApi_key() + "&text=" + text;
         String request = config.getUrl();
         URL url = new URL(request);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        logger.debug("Sending request to datumbox");
-        InputStream inputStream = hitApiService.postURL(connection, url, urlParameters, request);
 
-        String jsonTxt = IOUtils.toString(inputStream);
+        service = Executors.newFixedThreadPool(1);
+        hitApiService = service.submit(new HitApiService(url, urlParameters, request));
+        InputStream inputStream = hitApiService.get();
         try {
+            String jsonTxt = IOUtils.toString(inputStream);
             responseData = parse(jsonTxt).replace("\"", "");
         } catch (Exception e) {
             e.printStackTrace();
