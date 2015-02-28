@@ -6,4 +6,22 @@
     <string name="action_settings">Settings</string>
 
     <string name="editTextInitial">Text to analyze</string>
+
+    <string-array name="analysis_items">
+        <item>Sentiment Analysis</item>
+        <item>Twitter Analysis</item>
+        <item>Subjectivity Analysis</item>
+        <item>Topic Classification</item>
+        <item>Spam Detection</item>
+        <item>Adult Content Detection</item>
+        <item>Sentiment Analysis</item>
+        <item>Readability Assessment</item>
+        <item>Language Detection</item>
+        <item>Commercial Detection</item>
+        <item>Educational Detection</item>
+        <item>Gender Detection</item>
+        <item>Keyword Extraction</item>
+        <item>Text Extraction</item>
+        <item>Document Similarity</item>
+    </string-array>
 </resources>

@@ -1,21 +1,36 @@
 package com.sotiris.datumboxapp.utils;
 
+import android.content.res.AssetManager;
+
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * Created by sotiris on 24/2/2015.
  */
 public class AppConfig {
 
     private static AppConfig config;
-    private static String api_key = "e69b9f2a99c73fd3993a7446e7bd5a2e";
-    private static String url = "http://api.datumbox.com/1.0/SentimentAnalysis.json";
+    private static String api_key;
+    private static String url;
 
-    private AppConfig() {
+    private AppConfig(AssetManager assetManager) {
         //TODO: Load properties from properties file
+        Properties prop = new Properties();
+        try {
+            InputStream fileStream = assetManager.open("config.properties");
+            prop.load(fileStream);
+            fileStream.close();
+            api_key = prop.getProperty("api_key");
+            url = prop.getProperty("url");
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public static AppConfig init() {
+    public static AppConfig init(AssetManager assetManager) {
         if(config == null) {
-            config = new AppConfig();
+            config = new AppConfig(assetManager);
         }
         return config;
     }

@@ -1,21 +1,21 @@
 package com.sotiris.datumboxapp.controllers;
 
+import android.content.res.AssetManager;
+
 import com.sotiris.datumboxapp.utils.AppConfig;
 import com.sotiris.datumboxapp.utils.HitApiService;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.apache.commons.io.IOUtils;
 
 
 /**
@@ -30,13 +30,13 @@ public class SingletonController {
     private Future<InputStream> hitApiService;
     private String responseData;
 
-    private SingletonController() {
-        config = AppConfig.init();
+    private SingletonController(AssetManager assetManager) {
+        config = AppConfig.init(assetManager);
     }
 
-    public static SingletonController getController() {
+    public static SingletonController getController(AssetManager assetManager) {
         if(controller == null) {
-            controller = new SingletonController();
+            controller = new SingletonController(assetManager);
             return controller;
         }
         return controller;

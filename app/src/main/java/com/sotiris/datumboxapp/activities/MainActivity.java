@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        controller = SingletonController.getController();
+        controller = SingletonController.getController(getAssets());
 
         setContentView(R.layout.activity_main);
 

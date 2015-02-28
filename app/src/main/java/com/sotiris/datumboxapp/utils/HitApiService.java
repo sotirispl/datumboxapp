@@ -1,6 +1,5 @@
 package com.sotiris.datumboxapp.utils;
 
-import android.os.AsyncTask;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,8 +7,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.Callable;
-
-import javax.net.ssl.HostnameVerifier;
 
 /**
  * Created by sotiris on 24/2/2015.
