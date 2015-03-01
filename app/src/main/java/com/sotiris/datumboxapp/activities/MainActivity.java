@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.sotiris.datumboxapp.R;
@@ -32,15 +33,21 @@ public class MainActivity extends Activity {
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
+
+                //TODO: add loading animation
+
                 EditText editText = (EditText) findViewById(R.id.editText);
                 String txt = editText.getText().toString();
+
+                Spinner spinner = (Spinner) findViewById(R.id.spinner);
+                String method = spinner.getSelectedItem().toString();
+
                 if(TextUtils.isEmpty(txt) || txt.replace(getString(R.string.editTextInitial), "").trim().length() == 0) {
                     editText.setError("Enter some text to analyze!");
                     return;
                 }
                 try {
-                    String response = controller.analyzeText(txt);
+                    String response = controller.analyzeText(txt, method.replaceAll("\\s", ""));
                     EditText responseText = (EditText) findViewById(R.id.responseText);
                     responseText.setText(response);
                 } catch (Exception e) {

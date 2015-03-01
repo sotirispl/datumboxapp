@@ -11,18 +11,21 @@ import java.util.Properties;
 public class AppConfig {
 
     private static AppConfig config;
-    private static String api_key;
+    private static String apiKey;
     private static String url;
+    private static String textSimilarity;
+    private static String numberOfKeywords;
 
     private AppConfig(AssetManager assetManager) {
-        //TODO: Load properties from properties file
         Properties prop = new Properties();
         try {
             InputStream fileStream = assetManager.open("config.properties");
             prop.load(fileStream);
             fileStream.close();
-            api_key = prop.getProperty("api_key");
+            apiKey = prop.getProperty("apiKey");
             url = prop.getProperty("url");
+            textSimilarity = prop.getProperty("textSimilarity");
+            numberOfKeywords = prop.getProperty("numberOfKeywords");
         }  catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,11 +38,19 @@ public class AppConfig {
         return config;
     }
 
-    public String getApi_key() {
-        return api_key;
+    public String getApiKey() {
+        return apiKey;
     }
 
     public String getUrl() {
         return url;
+    }
+
+    public String getTextSimilarity() {
+        return textSimilarity;
+    }
+
+    public String getNumberOfKeywords() {
+        return numberOfKeywords;
     }
 }

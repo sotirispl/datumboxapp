@@ -1,6 +1,8 @@
 package com.sotiris.datumboxapp.utils;
 
 
+import android.content.res.AssetManager;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,14 +17,52 @@ public class HitApiService implements Callable<InputStream> {
 
     private HttpURLConnection connection;
     private String urlParameters;
-    private String request;
     private URL url;
+    private String method;
 
-    public HitApiService(URL url, String urlParameters, String request) throws IOException {
-        this.urlParameters = urlParameters;
-        this.request = request;
-        this.url = url;
-        this.connection = (HttpURLConnection) url.openConnection();
+    private static AppConfig config;
+
+    public HitApiService(AssetManager assetManager, String method, String input) throws IOException {
+        this.method = method;
+        config = AppConfig.init(assetManager);
+        url = new URL(new URL(config.getUrl()), method+".json");
+
+        handleUrlParameters(input);
+
+        connection = (HttpURLConnection) url.openConnection();
+    }
+
+    /*
+    Parameter text:
+        Sentimental
+        Twitter
+        Subjectivity
+        Topic Classification
+        Spam
+        Adult content
+        Readability
+        Language
+        Commercial
+        Educational
+        Gender
+        Text
+    Parameter text and number of keywords to get:
+        Keyword Extraction
+    Parameter text and copy to compare
+        Document Similarity
+     */
+    private void handleUrlParameters(String input) {
+        urlParameters = "api_key=" + config.getApiKey();
+        switch (method) {
+            case "DocumentSimilarity":
+                urlParameters += "&original=" + input + "&copy=" + config.getTextSimilarity();
+                break;
+            case "KeywordExtraction":
+                urlParameters += "&n=" + config.getNumberOfKeywords();
+            default:
+                urlParameters += "&text=" + input;
+                break;
+        }
     }
 
     private InputStream postURL() throws IOException {

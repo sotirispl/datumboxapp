@@ -25,13 +25,13 @@ public class SingletonController {
 
     private static SingletonController controller = null;
 
-    private static AppConfig config;
+    private AssetManager assetManager;
     private ExecutorService service;
     private Future<InputStream> hitApiService;
     private String responseData;
 
     private SingletonController(AssetManager assetManager) {
-        config = AppConfig.init(assetManager);
+        this.assetManager = assetManager;
     }
 
     public static SingletonController getController(AssetManager assetManager) {
@@ -42,13 +42,11 @@ public class SingletonController {
         return controller;
     }
 
-    public String analyzeText(String text) throws IOException, ExecutionException, InterruptedException {
-        String urlParameters = "api_key=" + config.getApi_key() + "&text=" + text;
-        String request = config.getUrl();
-        URL url = new URL(request);
+    public String analyzeText(String text, String method) throws IOException, ExecutionException, InterruptedException {
+
 
         service = Executors.newFixedThreadPool(1);
-        hitApiService = service.submit(new HitApiService(url, urlParameters, request));
+        hitApiService = service.submit(new HitApiService(assetManager, method, text));
         InputStream inputStream = hitApiService.get();
         try {
             String jsonTxt = IOUtils.toString(inputStream);
