@@ -15,9 +15,6 @@ import android.widget.Toast;
 import com.sotiris.datumboxapp.R;
 import com.sotiris.datumboxapp.controllers.SingletonController;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
 public class MainActivity extends Activity {
 
     private SingletonController controller;
@@ -42,10 +39,11 @@ public class MainActivity extends Activity {
                 Spinner spinner = (Spinner) findViewById(R.id.spinner);
                 String method = spinner.getSelectedItem().toString();
 
-                if(TextUtils.isEmpty(txt) || txt.replace(getString(R.string.editTextInitial), "").trim().length() == 0) {
+                if(TextUtils.isEmpty(txt) || txt.trim().length() == 0) {
                     editText.setError("Enter some text to analyze!");
                     return;
                 }
+
                 try {
                     String response = controller.analyzeText(txt, method.replaceAll("\\s", ""));
                     EditText responseText = (EditText) findViewById(R.id.responseText);
@@ -53,6 +51,16 @@ public class MainActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        final Button cancel = (Button) findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                EditText editText = (EditText) findViewById(R.id.editText);
+                editText.setText("");
+                Spinner spinner = (Spinner) findViewById(R.id.spinner);
+                spinner.setSelection(0);
             }
         });
     }
