@@ -11,7 +11,10 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
- * Created by sotiris on 24/2/2015.
+ * @author Sotiris Poulias
+ *
+ * HitApiService is called as a thread service through the call() method
+ * and returns an InputStream object.
  */
 public class HitApiService implements Callable<InputStream> {
 
@@ -22,34 +25,29 @@ public class HitApiService implements Callable<InputStream> {
 
     private static AppConfig config;
 
-    public HitApiService(AssetManager assetManager, String method, String input) throws IOException {
-        this.method = method;
+    /**
+     * Method to construct a new HitApiService object
+     *
+     * @param assetManager is needed to read config files from assets
+     * @param methodSelected selected by the user
+     * @param input the text that the user wants to analyze
+     */
+    public HitApiService(AssetManager assetManager, String methodSelected, String input) throws IOException {
+        method = methodSelected;
         config = AppConfig.init(assetManager);
         url = new URL(new URL(config.getUrl()), method+".json");
 
+        //called to handle the parameters that are posted in datumbox API
         handleUrlParameters(input);
 
+        //open a connection with the API
         connection = (HttpURLConnection) url.openConnection();
     }
 
-    /*
-    Parameter text:
-        Sentimental
-        Twitter
-        Subjectivity
-        Topic Classification
-        Spam
-        Adult content
-        Readability
-        Language
-        Commercial
-        Educational
-        Gender
-        Text
-    Parameter text and number of keywords to get:
-        Keyword Extraction
-    Parameter text and copy to compare
-        Document Similarity
+    /**
+     * Handle the parameters that are needed by the API.
+     *
+     * @param input the text that the user wants to analyze
      */
     private void handleUrlParameters(String input) {
         urlParameters = "api_key=" + config.getApiKey();
@@ -65,8 +63,15 @@ public class HitApiService implements Callable<InputStream> {
         }
     }
 
+    /**
+     * Posts the parameters through the connection opened in the constructor
+     *
+     * @return InputStream with the response from the API
+     * @throws IOException
+     */
     private InputStream postURL() throws IOException {
 
+        //set the properties for this connection
         connection.setDoOutput(true);
         connection.setDoInput(true);
         connection.setInstanceFollowRedirects(false);
@@ -76,14 +81,18 @@ public class HitApiService implements Callable<InputStream> {
         connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
         connection.setUseCaches(false);
 
+        //open the OutputStream through which the parameters are posted
         DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 
+        //write the parameters
         try {
             wr.writeBytes(urlParameters);
             wr.flush();
         } finally {
             wr.close();
         }
+
+        //get the response
         InputStream inputStream = connection.getInputStream();
         return inputStream;
     }

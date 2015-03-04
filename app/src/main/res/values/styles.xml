@@ -1,5 +1,4 @@
 <resources>
-
     <style name="LayoutStyle" parent="android:ThemeOverlay.Material.Light">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
